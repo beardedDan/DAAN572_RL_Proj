@@ -1,6 +1,6 @@
 # DAAN572 Reinforcement Learning Final Project
 
-The project develops a REINFORCE algorithm in a simulated metabolic environments of diabetic individuals, provided by the Simglucose module (https://github.com/jxx123/simglucose), for an agent that controls an insulin pump. 
+This project develops a REINFORCE algorithm in a simulated metabolic environments of diabetic individuals, provided by the Simglucose module (https://github.com/jxx123/simglucose), for an agent that controls an insulin pump. 
 
 
 ## Background
