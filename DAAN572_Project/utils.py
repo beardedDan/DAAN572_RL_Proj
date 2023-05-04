@@ -6,32 +6,46 @@ import numpy as np
 
 
 def compute_loss(policy: nn.Module, optimizer: torch.optim, discount_factor: float):
-  """
-  Given a policy compute the loss associated with it.
 
-  :param policy: Neural network to be used as the policy for the agent.
-  :param optimizer: The optimizer to be used to tune the policy.
-  :param discount_factor: The discount rate for the rewards.
+    trajectory_length = len(policy.rewards)
+    returns = np.empty(trajectory_length, dtype = np.float32)
+    future_ret = 0.
 
-  :return: float
-  """
-  trajectory_length = len(policy.rewards)
-  returns = np.empty(trajectory_length, dtype = np.float32)
-  future_ret = 0.
-
-  # compute the returns efficiently.
-  for t in reversed(range(trajectory_length)):
-    future_ret = policy.rewards[t] + discount_factor * future_ret
-    returns[t] = future_ret
+    # compute the returns efficiently.
+    for t in reversed(range(trajectory_length)):
+        future_ret = policy.rewards[t] + discount_factor * future_ret
+        returns[t] = future_ret
     pass
 
-  loss = -torch.sum(torch.stack(policy.log_probabilities) * torch.tensor(returns))
-  optimizer.zero_grad()
-  loss.backward()
-  optimizer.step()
+    loss = -torch.sum(torch.stack(policy.log_probabilities) * torch.tensor(returns))
 
-  return loss
+    optimizer.zero_grad()
+    loss.backward(retain_graph=True)
+    optimizer.step()
 
+    return loss
+
+
+
+def compute_sugar_loss(policy: nn.Module, optimizer2: torch.optim, discount_factor: float):
+
+    trajectory_length = len(policy.rewards)
+    returns = np.empty(trajectory_length, dtype = np.float32)
+    future_ret = 0.
+
+    # compute the returns efficiently.
+    for t in reversed(range(trajectory_length)):
+        future_ret = policy.rewards[t] + discount_factor * future_ret
+        returns[t] = future_ret
+    pass
+ 
+    loss2 = -torch.sum(torch.stack(policy.sugar_probabilities) * torch.tensor(returns)) 
+
+    optimizer2.zero_grad()
+    loss2.backward(retain_graph=True)
+    optimizer2.step()
+
+    return loss2
 
 
 def CVGA_score(stat): 
